@@ -1,49 +1,41 @@
 /* @refresh reload */
-import { lazy } from "solid-js";
 import { render } from "solid-js/web";
-import { Router, Route } from "@solidjs/router";
-import { useParams } from "@solidjs/router"
-
-// const Route1 = lazy(() => import('./pages/Route1'))
-// const Route2 = lazy(() => import('./pages/Route2'))
+import { Router, Route, A, useLocation, useParams } from "@solidjs/router";
 
 render(() => (
   <Router>
-    <Route path="/" component={() => <h1>Home</h1>} />
-    <Route
-      path="/route1/:id"
-      component={Route1}
-    />
-    <Route
-      path="/route2/:id"
-      component={Route2}
-    />
+    <Route path="/" component={App} />
+    <Route path="/profile" component={UserProfile} />
   </Router>
 ), document.getElementById("root"));
 
-function Route1(props) {
-  console.log('props', props) // includes `location` & `params`
-  console.log('Users.params', props.params)       // Proxy(Object) {}
-  console.log('props.params.id', props.params.id) // 1
+function App() {
+  return (
+    <nav>
+      <A href="/profile?username=johndoe&age=30">John Doe's Profile</A>
+http://localhost:3000/?username=johndoe&age=30
+    </nav>
+  );
+}
+
+function UserProfile() {
+  const location = useLocation();
+  const query = location.query
   
-  return (
-    <>
-      <h1>Route1</h1>
-    </>
-  )
-}
 
-function Route2() {
-  const p = useParams()
-  console.log('p', p)       // Proxy(Object) {}
-  console.log('p.id', p.id) // 1
-  return (
-    <>
-      <h1>Route2</h1>
-    </>
-  )
-}
+  const params = useParams();
+  console.log('params', params.username)
+  console.log('params', params.age)
 
-/*
-Does `useParams` do something different than `props.params?`
-*/
+  return (
+    <div>
+      <h1>User Profile</h1>
+      <h2>Query</h2>
+      <p>Username: {query.username}</p>
+      <p>Age: {query.age}</p>
+      <h2>Params</h2>
+      <p>Username: {params.username}</p>
+      <p>Age: {params.age}</p>
+    </div>
+  );
+}
